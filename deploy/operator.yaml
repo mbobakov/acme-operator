@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: acme-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: acme-operator
+  template:
+    metadata:
+      labels:
+        name: acme-operator
+    spec:
+      serviceAccountName: acme-operator
+      containers:
+        - name: acme-operator
+          # Replace this with the built image name
+          image: REPLACE_IMAGE
+          command:
+          - acme-operator
+          imagePullPolicy: Always
+          env:
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "acme-operator"
